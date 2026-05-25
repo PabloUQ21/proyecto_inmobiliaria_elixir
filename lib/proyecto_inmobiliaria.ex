@@ -5,6 +5,8 @@ defmodule ProyectoInmobiliaria.Application do
     children = [
       {Registry, keys: :unique, name: Inmobiliaria.PropertyRegistry},
       {Inmobiliaria.PropertySupervisor, []},
+      # Agregamos este Agente para guardar el usuario logueado
+      {Agent, fn -> %{usuario: nil, rol: nil} end, name: Inmobiliaria.SesionUsuario},
 
       %{
         id: :cargador_propiedades,
