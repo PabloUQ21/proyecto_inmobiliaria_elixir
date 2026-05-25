@@ -4,7 +4,12 @@ defmodule ProyectoInmobiliaria.Application do
   def start(_type, _args) do
     children = [
       {Registry, keys: :unique, name: Inmobiliaria.PropertyRegistry},
-      {Inmobiliaria.PropertySupervisor, []}
+      {Inmobiliaria.PropertySupervisor, []},
+
+      %{
+        id: :cargador_propiedades,
+        start: {Task, :start_link, [fn -> Inmobiliaria.PropertyManager.cargar_propiedades() end]}
+      }
     ]
 
     opts = [
