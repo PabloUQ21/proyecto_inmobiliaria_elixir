@@ -141,9 +141,9 @@ defmodule Inmobiliaria.PropertyManager do
   def estadisticas do
     if File.exists?("data/properties.dat") do
       contenido = File.read!("data/properties.dat")
-      lineas = String.split(contenido, "\n")
+      lineas = String.split(contenido, "\n", trim: true)
 
-      total = Enum.count(lineas, fn linea -> linea != "" end)
+      total = Enum.count(lineas)
       vendidas = Enum.count(lineas, fn linea ->
         datos = String.split(linea, ";")
         length(datos) > 7 and Enum.at(datos, 7) == "vendida"
@@ -164,4 +164,30 @@ defmodule Inmobiliaria.PropertyManager do
     end
   end
 
+  def cargar_propiedades do
+    if File.exists?("data/properties.dat") do
+      contenido = File.read!("data/properties.dat")
+      lineas = String.split(contenido, "\n", trim: true)
+
+      Enum.each(lineas, fn linea ->
+        datos = String.split(linea, ";")
+        if length(datos) > 7 do
+          id = Enum.at(datos, 0)
+          estado = Enum.at(datos, 7)
+          if estado == "disponible" do
+            case Registry.lookup(Inmobiliaria.PropertyRegistry, id) do
+              [] ->
+                Inmobiliaria.PropertySupervisor.iniciar_propiedad(%{
+                  id: id, tipo: Enum.at(datos, 1), modalidad: Enum.at(datos, 2),
+                  ubicacion: Enum.at(datos, 3), precio: Enum.at(datos, 4),
+                  habitaciones: Enum.at(datos, 5), area: Enum.at(datos, 6),
+                  estado: estado, propietario: Enum.at(datos, 8)
+                })
+              _ -> :ok
+            end
+          end
+        end
+      end)
+    end
+  end
 end
