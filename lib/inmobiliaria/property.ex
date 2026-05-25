@@ -3,7 +3,6 @@ defmodule Inmobiliaria.Property do
   use GenServer
 
 
-  # Arrancamos y registramos el proceso con el ID de la propiedad
   def start_link(propiedad) do
     name = {:via, Registry, {Inmobiliaria.PropertyRegistry, propiedad.id}}
     GenServer.start_link(__MODULE__, propiedad, name: name)
@@ -30,13 +29,11 @@ defmodule Inmobiliaria.Property do
   end
 
 
-  # Función auxiliar para buscar el proceso en el Registry
   defp via_tuple(id_propiedad) do
     {:via, Registry, {Inmobiliaria.PropertyRegistry, id_propiedad}}
   end
 
 
-  # --- Callbacks del GenServer ---
 
   def handle_call(:ver_estado, _from, propiedad) do
     {:reply, propiedad, propiedad}

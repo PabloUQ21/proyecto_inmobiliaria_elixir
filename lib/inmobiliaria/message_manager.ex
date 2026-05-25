@@ -4,7 +4,6 @@ defmodule Inmobiliaria.MessageManager do
     fecha = Date.to_string(Date.utc_today())
     linea = "#{fecha};#{propiedad};#{cliente};#{mensaje}\n"
 
-    # Aseguramos que la carpeta data exista
     File.mkdir_p!("data")
     File.write!("data/messages.log", linea, [:append])
 

@@ -40,7 +40,7 @@ defmodule Inmobiliaria.Menu do
     area = IO.gets("Área: ") |> String.trim()
     propietario = IO.gets("Propietario: ") |> String.trim()
 
-    # Aquí validamos la ubicación antes de publicar
+    
     if Inmobiliaria.Location.es_valida?(ubicacion) do
       Inmobiliaria.PropertyManager.publicar_propiedad(
         id, tipo, modalidad, ubicacion, precio, habitaciones, area, propietario
