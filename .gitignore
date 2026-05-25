@@ -22,3 +22,5 @@ erl_crash.dump
 # Ignore package tarball (built via "mix hex.build").
 proyecto_inmobiliaria-*.tar
 
+# Datos persistentes
+data/
