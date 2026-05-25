@@ -5,13 +5,7 @@ defmodule ProyectoInmobiliaria.Application do
     children = [
       {Registry, keys: :unique, name: Inmobiliaria.PropertyRegistry},
       {Inmobiliaria.PropertySupervisor, []},
-      # Agregamos este Agente para guardar el usuario logueado
-      {Agent, fn -> %{usuario: nil, rol: nil} end, name: Inmobiliaria.SesionUsuario},
-
-      %{
-        id: :cargador_propiedades,
-        start: {Task, :start_link, [fn -> Inmobiliaria.PropertyManager.cargar_propiedades() end]}
-      }
+      Inmobiliaria.SesionUsuario
     ]
 
     opts = [
@@ -19,6 +13,12 @@ defmodule ProyectoInmobiliaria.Application do
       name: ProyectoInmobiliaria.Supervisor
     ]
 
-    Supervisor.start_link(children, opts)
+    case Supervisor.start_link(children, opts) do
+      {:ok, pid} ->
+        Inmobiliaria.PropertyManager.cargar_propiedades()
+        {:ok, pid}
+      error ->
+        error
+    end
   end
 end

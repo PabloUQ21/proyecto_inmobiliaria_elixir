@@ -38,7 +38,7 @@ defmodule Inmobiliaria.Menu do
       precio = IO.gets("Precio: ") |> String.trim()
       habitaciones = IO.gets("Habitaciones: ") |> String.trim()
       area = IO.gets("Área: ") |> String.trim()
-      propietario = sesion.usuario # Se usa el usuario logueado automáticamente
+      propietario = sesion.usuario
 
       if Inmobiliaria.Location.es_valida?(ubicacion) do
         Inmobiliaria.PropertyManager.publicar_propiedad(id, tipo, modalidad, ubicacion, precio, habitaciones, area, propietario)
@@ -60,11 +60,19 @@ defmodule Inmobiliaria.Menu do
     IO.puts("\n--- Opciones de Búsqueda ---")
     IO.puts("1. Buscar por Tipo | 2. Por Ubicación | 3. Por Modalidad | 4. Precio Máximo")
     sub_opcion = IO.gets("Seleccione un filtro (1-4): ") |> String.trim()
+
     case sub_opcion do
-      "1" -> Inmobiliaria.PropertyManager.buscar_por_tipo(IO.gets("Tipo: ") |> String.trim())
-      "2" -> Inmobiliaria.PropertyManager.buscar_por_ubicacion(IO.gets("Ubicación: ") |> String.trim())
-      "3" -> Inmobiliaria.PropertyManager.buscar_por_modalidad(IO.gets("Modalidad: ") |> String.trim())
-      "4" -> Inmobiliaria.PropertyManager.buscar_por_precio(IO.gets("Precio máximo: ") |> String.trim())
+      "1" ->
+        IO.puts("Tipos disponibles: #{Enum.join(Inmobiliaria.PropertyManager.obtener_tipos_disponibles(), ", ")}")
+        Inmobiliaria.PropertyManager.buscar_por_tipo(IO.gets("Tipo: ") |> String.trim())
+      "2" ->
+        IO.puts("Ubicaciones disponibles: #{Enum.join(Inmobiliaria.PropertyManager.obtener_ubicaciones_disponibles(), ", ")}")
+        Inmobiliaria.PropertyManager.buscar_por_ubicacion(IO.gets("Ubicación: ") |> String.trim())
+      "3" ->
+        IO.puts("Modalidades disponibles: #{Enum.join(Inmobiliaria.PropertyManager.obtener_modalidades_disponibles(), ", ")}")
+        Inmobiliaria.PropertyManager.buscar_por_modalidad(IO.gets("Modalidad: ") |> String.trim())
+      "4" ->
+        Inmobiliaria.PropertyManager.buscar_por_precio(IO.gets("Precio máximo: ") |> String.trim())
       _ -> IO.puts("Opción inválida")
     end
     iniciar()
