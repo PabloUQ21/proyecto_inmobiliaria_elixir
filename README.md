@@ -18,5 +18,4 @@ Proyecto final de Programación III. Simula el flujo real de una inmobiliaria ap
 
    ```bash
 
-   iex.bat -S mix
-   Inmobiliaria.Menu.iniciar()
+   iex.bat -S mix, Inmobiliaria.Menu.iniciar()
